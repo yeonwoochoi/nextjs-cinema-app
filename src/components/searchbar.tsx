@@ -30,17 +30,19 @@ export default function Searchbar() {
   }
 
   return (
-    <div>
+    <div className="flex w-full gap-2 h-12 mt-2 mb-6">
       <input
         type="text"
         placeholder="검색어를 입력하세요..."
         value={search}
         onChange={onChangeSearch}
         onKeyDown={onKeyDown}
-        className="px-2 py-1 outline rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex-1 px-4 bg-transparent border border-gray-400 placeholder-gray-600 rounded-md"
 
       />
-      <button onClick={onSubmit} className="ml-2 px-3 py-1 bg-gray-200 text-black border-1 border-gray-400 rounded hover:bg-gray-400">검색</button>
+      <button className="w-[80px] bg-[#434343] rounded-md cursor-pointer" onClick={onSubmit}>
+        검색
+      </button>
     </div>
   )
 }
