@@ -1,11 +1,14 @@
 import { MovieData } from "../../../types/types";
-import movies from "../../../mock/movies.json"
 import { Suspense } from "react";
+import { cachedFetch } from "../../../lib/api";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params
 
-  const movie: MovieData | undefined = movies.find((movie) => String(movie.id) === String(id));
+  // 일단은 캐싱
+  // 댓글창 추가되면 SSR 방식으로 변경 예정
+  const movie: MovieData = await cachedFetch<MovieData>(`/movie/${id}`)
+
   if (!movie) {
     return <div>잘못된 요청입니다.</div>
   }

@@ -1,31 +1,43 @@
-import movies from '../../mock/movies.json'
 import MovieItem from "../../components/movie-item";
 import { MovieData } from "../../types/types";
+import { cachedFetch, revalidatingFetch } from "../../lib/api";
 
 async function AllMovies() {
-  const allMovies: MovieData[] = movies
+  try {
+    // 데이터 변경이 거의 없으므로 SSG 캐싱 사용
+    const allMovies: MovieData[] = await cachedFetch('/movie')
 
-  return (
-    <div className="grid grid-cols-5 gap-1">
-      {allMovies.map(movie => {
-        return <MovieItem key={movie.id} {...movie} />
-      })}
-    </div>
-  )
+    return (
+      <div className="grid grid-cols-5 gap-1">
+        {allMovies.map(movie => {
+          return <MovieItem key={movie.id} {...movie} />
+        })}
+      </div>
+    )
+  } catch (err) {
+    console.error(err)
+    return <div>{err}</div>
+  }
 }
 
 async function RecoMovies() {
-  const recoMovies: MovieData[] = [...movies]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3)
+  try {
+    // SSG처럼 캐싱할 수도 있지만,
+    // 1시간 주기로 캐시를 갱신하는 ISR 방식을 사용함.
+    // (On Demand ISR이 더 효과적이지만, 이번에는 생략함)
+    const recoMovies: MovieData[] = await revalidatingFetch<MovieData[]>('/movie/random', 3600)
 
-  return (
-    <div className="grid grid-cols-3 gap-1">
-      {recoMovies.map(movie => {
-        return <MovieItem key={movie.id} {...movie} />
-      })}
-    </div>
-  )
+    return (
+      <div className="grid grid-cols-3 gap-1">
+        {recoMovies.map(movie => {
+          return <MovieItem key={movie.id} {...movie} />
+        })}
+      </div>
+    )
+  } catch (err) {
+    console.error(err)
+    return <div>{err}</div>
+  }
 }
 
 export default function Home() {
