@@ -1,9 +1,10 @@
-import allMovies from "../../../mock/movies.json";
 import MovieItem from "../../../components/movie-item";
 import { MovieData } from "../../../types/types";
+import { dynamicFetch } from "../../../lib/api";
 
 async function SearchResult({ q }: { q: string }) {
-  const searchedMovies: MovieData[] = allMovies.filter(movie => movie.title.includes(q) || movie.subTitle.includes(q) || movie.description.includes(q))
+  // 검색어가 다양해 SSG 캐시 관리가 어려워 SSR 방식으로 데이터를 가져옴
+  const searchedMovies: MovieData[] = await dynamicFetch(`/movie/search?q=${q}`)
 
   if (!searchedMovies) {
     return <div>검색 결과가 없습니다.</div>
