@@ -15,8 +15,15 @@ async function AllMovies() {
       </div>
     )
   } catch (err) {
-    console.error(err)
-    return <div>{err}</div>
+    let message = "알 수 없는 에러 발생";
+
+    if (err instanceof Error) {
+      message = err.message;
+    } else if (typeof err === "string") {
+      message = err;
+    }
+
+    return <div>{message}</div>;
   }
 }
 
@@ -36,7 +43,15 @@ async function RecoMovies() {
     )
   } catch (err) {
     console.error(err)
-    return <div>{err}</div>
+    let message = "알 수 없는 에러 발생";
+
+    if (err instanceof Error) {
+      message = err.message;
+    } else if (typeof err === "string") {
+      message = err;
+    }
+
+    return <div>{message}</div>;
   }
 }
 

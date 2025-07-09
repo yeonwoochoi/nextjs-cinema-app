@@ -2,8 +2,23 @@ import { MovieData } from "../../../types/types";
 import { Suspense } from "react";
 import { cachedFetch } from "../../../lib/api";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = params
+// true이면 정의되지 않는 param은 최초 SSR로 동작 -> 이후는 캐싱되어 정적으로 제공됨
+// false이면 정의되지 않는 param은 not-found 페이지 return
+export const dynamicParams = false;
+
+// 빌드시 SSG로 생성해 Full Route Cache에 저장됨
+export function generateStaticParams() {
+  return [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" }
+  ]
+}
+
+type PageParams = Promise<{ id: string }>;
+
+export default async function Page({ params }: { params: PageParams }) {
+  const { id } = await params
 
   // 일단은 캐싱
   // 댓글창 추가되면 SSR 방식으로 변경 예정
@@ -15,11 +30,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const {
     title,
+    subTitle,
+    description,
     releaseDate,
     company,
     genres,
-    subTitle,
-    description,
     runtime,
     posterImgUrl
   }: MovieData = movie
