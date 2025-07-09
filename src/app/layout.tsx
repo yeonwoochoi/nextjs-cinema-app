@@ -14,7 +14,7 @@ export default function RootLayout({
           <header className="p-4 font-bold text-[#e50914] text-[20px]">
             <Link href={'/'}>🎥 ONEBITE CINEMA</Link>
           </header>
-          <main className="px-4 grow">
+          <main className="flex flex-col grow px-4">
             {children}
           </main>
           <footer className="mt-8 p-4 text-sm text-gray-500">
