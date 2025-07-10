@@ -4,7 +4,7 @@ import { cachedFetch } from "../../../lib/api";
 
 // true이면 정의되지 않는 param은 최초 SSR로 동작 -> 이후는 캐싱되어 정적으로 제공됨
 // false이면 정의되지 않는 param은 not-found 페이지 return
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 // 빌드시 SSG로 생성해 Full Route Cache에 저장됨
 export function generateStaticParams() {
