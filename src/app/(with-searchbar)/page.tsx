@@ -1,9 +1,14 @@
 import MovieItem from "../../components/movie-item";
 import { MovieData } from "../../types/types";
 import { cachedFetch, revalidatingFetch } from "../../lib/api";
+import { Suspense } from "react";
+import MovieListSkeleton from "../../components/skeleton/movie-list-skeleton";
+import delay from "../../utils/delay";
 
 async function AllMovies() {
   try {
+    await delay(2000)
+
     // 데이터 변경이 거의 없으므로 SSG 캐싱 사용
     const allMovies: MovieData[] = await cachedFetch('/movie')
 
@@ -29,6 +34,8 @@ async function AllMovies() {
 
 async function RecoMovies() {
   try {
+    await delay(3000)
+
     // SSG처럼 캐싱할 수도 있지만,
     // 1시간 주기로 캐시를 갱신하는 ISR 방식을 사용함.
     // (On Demand ISR이 더 효과적이지만, 이번에는 생략함)
@@ -60,11 +67,15 @@ export default function Home() {
     <div className="flex flex-col gap-y-16 py-4">
       <div>
         <div className="text-lg font-bold pb-4">지금 가장 추천하는 영화</div>
-        <RecoMovies/>
+        <Suspense fallback={<MovieListSkeleton count={3} />}>
+          <RecoMovies/>
+        </Suspense>
       </div>
       <div>
         <div className="text-lg font-bold pb-4">등록된 모든 영화</div>
-        <AllMovies/>
+        <Suspense fallback={<MovieListSkeleton count={12} itemsPerRow={5} />}>
+          <AllMovies/>
+        </Suspense>
       </div>
     </div>
   );

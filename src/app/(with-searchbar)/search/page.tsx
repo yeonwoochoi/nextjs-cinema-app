@@ -3,6 +3,7 @@ import { MovieData } from "../../../types/types";
 import { dynamicFetch } from "../../../lib/api";
 import delay from "../../../utils/delay";
 import { Suspense } from 'react'
+import MovieListSkeleton from "../../../components/skeleton/movie-list-skeleton";
 
 async function SearchResult({ q }: { q: string }) {
   // 검색어가 다양해 SSG 캐시 관리가 어려워 SSR 방식으로 데이터를 가져옴
@@ -26,7 +27,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
   const { q } = await searchParams
   const query = q ?? "";
   return (
-    <Suspense key={query} fallback={<div>Loading...</div>}>
+    <Suspense key={query} fallback={<MovieListSkeleton count={3} />}>
       <SearchResult q={query} />
     </Suspense>
   )
