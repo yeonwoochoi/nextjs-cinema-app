@@ -1,5 +1,5 @@
 import { ReactNode, Suspense } from "react";
-import Searchbar from "../../components/searchbar";
+import Searchbar from "@/components/searchbar";
 
 export default function SearchLayout ({children}: {children: ReactNode}) {
   return (

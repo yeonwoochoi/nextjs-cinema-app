@@ -1,4 +1,4 @@
-import { MovieData } from "../types/types";
+import { MovieData } from "@/types/types";
 import Link from "next/link";
 
 export default function MovieItem({ id, posterImgUrl }: MovieData) {

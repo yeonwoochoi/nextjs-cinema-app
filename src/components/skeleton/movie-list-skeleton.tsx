@@ -1,6 +1,6 @@
-import MovieItemSkeleton from "./movie-item-skeleton";
+import MovieItemSkeleton from "@/components/skeleton/movie-item-skeleton";
 
-export default function MovieListSkeleton({ count, itemsPerRow = 3 }: { count: number, itemsPerRow: number }) {
+export default function MovieListSkeleton({ count, itemsPerRow = 3 }: { count: number, itemsPerRow?: number }) {
   const getGridColsClass = (n: number) => `grid-cols-${n}`;
 
   return (

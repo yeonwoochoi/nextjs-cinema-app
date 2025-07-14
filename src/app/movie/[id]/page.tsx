@@ -1,8 +1,9 @@
-import {MovieData, ReviewData} from "@/types/types";
-import {Suspense, useActionState} from "react";
-import {cachedFetch, taggedFetch} from "@/lib/api";
+import { MovieData, ReviewData } from "@/types/types";
+import { Suspense } from "react";
+import { ApiResult, cachedFetch, taggedFetch } from "@/lib/api";
 import ReviewItem from "@/components/review/review-item";
 import ReviewEditor from "@/components/review/review-editor";
+import ErrorMessage from "@/components/error-message";
 
 // true이면 정의되지 않는 param은 최초 SSR로 동작 -> 이후는 캐싱되어 정적으로 제공됨
 // false이면 정의되지 않는 param은 not-found 페이지 return
@@ -19,13 +20,15 @@ export function generateStaticParams() {
 
 type PageParams = Promise<{ id: string }>;
 
-async function MovieDetail({id}: { id: string }) {
+async function MovieDetail({ movieId }: { movieId: string }) {
   // 일단은 캐싱
   // 댓글창 추가되면 SSR 방식으로 변경 예정
-  const movie: MovieData = await cachedFetch<MovieData>(`/movie/${id}`)
+  const result: ApiResult<MovieData | null> = await cachedFetch<MovieData>(`/movie/${movieId}`)
 
-  if (!movie) {
-    return <div>잘못된 요청입니다.</div>
+  if (result.status === "error" || !result.data) {
+    return (
+      <ErrorMessage message="영화 정보를 불러오지 못했습니다."/>
+    )
   }
 
   const {
@@ -37,7 +40,7 @@ async function MovieDetail({id}: { id: string }) {
     genres,
     runtime,
     posterImgUrl
-  }: MovieData = movie
+  }: MovieData = result.data
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -61,8 +64,16 @@ async function MovieDetail({id}: { id: string }) {
   )
 }
 
-async function ReviewList({id}: { id: string }) {
-  const reviews: ReviewData[] = await taggedFetch(`/review/movie/${id}`, [`review-${id}`])
+async function ReviewList({ movieId }: { movieId: string }) {
+  const result: ApiResult<ReviewData[] | null> = await taggedFetch(`/review/movie/${movieId}`, [`review-${movieId}`])
+
+  if (result.status === "error" || !result.data) {
+    return (
+      <ErrorMessage message="리뷰 목록을 불러오지 못했습니다."/>
+    )
+  }
+
+  const reviews = result.data
 
   if (!reviews || reviews.length === 0) {
     return <div className="text-white font-bold text-2xl">리뷰가 없습니다.</div>
@@ -81,9 +92,9 @@ export default async function Page({params}: { params: PageParams }) {
   const {id} = await params
   return (
     <div>
-      <MovieDetail id={id}/>
-      <ReviewEditor bookId={id} />
-      <ReviewList id={id}/>
+      <MovieDetail movieId={id}/>
+      <ReviewEditor movieId={id}/>
+      <ReviewList movieId={id}/>
     </div>
   )
 }
