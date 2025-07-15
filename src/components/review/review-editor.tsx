@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react"
 import { createReviewAction } from "@/actions/create-review.action"
 import { ApiResult } from "@/lib/api";
 import { ReviewData } from "@/types/types";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 type ReviewActionState = ApiResult<ReviewData | null>
 
@@ -41,9 +42,9 @@ export default function ReviewEditor({ movieId }: { movieId: string }) {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-white text-black px-2 sm:px-4 sm:w-28 w-32 font-bold hover:bg-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className="bg-white text-black px-2 sm:px-4 sm:w-28 w-32 font-bold hover:bg-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed relative"
           >
-            작성하기
+            { isPending ? <LoadingSpinner color="fill-black" /> : "작성하기" }
           </button>
         </div>
       </form>
