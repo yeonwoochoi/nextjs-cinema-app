@@ -2,7 +2,6 @@
 
 import { ApiResult, fetchApi } from "@/lib/api";
 import { revalidateTag } from "next/cache";
-import delay from "@/utils/delay";
 
 export async function deleteReviewAction(_: any, formData: FormData): Promise<ApiResult<null>> {
   const reviewId = formData.get('reviewId')?.toString()
@@ -18,8 +17,6 @@ export async function deleteReviewAction(_: any, formData: FormData): Promise<Ap
   const result: ApiResult<any> = await fetchApi(`/review/${reviewId}`, {
     method: 'DELETE'
   })
-
-  await delay(2000)
 
   if (result.status === "error") {
     return {

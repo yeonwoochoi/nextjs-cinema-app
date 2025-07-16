@@ -3,12 +3,9 @@ import { MovieData } from "@/types/types";
 import { ApiResult, cachedFetch, revalidatingFetch } from "@/lib/api";
 import { Suspense } from "react";
 import MovieListSkeleton from "@/components/skeleton/movie-list-skeleton";
-import delay from "@/utils/delay";
 import ErrorMessage from "@/components/error-message";
 
 async function AllMovies() {
-  await delay(2000)
-
   // 데이터 변경이 거의 없으므로 SSG 캐싱 사용
   const result: ApiResult<MovieData[] | null> = await cachedFetch('/movie')
 
@@ -30,8 +27,6 @@ async function AllMovies() {
 }
 
 async function RecoMovies() {
-  await delay(3000)
-
   // SSG처럼 캐싱할 수도 있지만,
   // 1시간 주기로 캐시를 갱신하는 ISR 방식을 사용함.
   // (On Demand ISR이 더 효과적이지만, 이번에는 생략함)

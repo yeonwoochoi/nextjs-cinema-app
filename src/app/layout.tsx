@@ -4,8 +4,10 @@ import Link from "next/link";
 
 export default function RootLayout({
   children,
+  modal
 }: Readonly<{
-  children: ReactNode;
+  children: ReactNode,
+  modal: ReactNode
 }>) {
   return (
     <html>
@@ -21,6 +23,8 @@ export default function RootLayout({
             © 2025 제작: YEONWOOCHOI
           </footer>
         </div>
+        {modal}
+        <div id="modal-root" />
       </body>
     </html>
   );
